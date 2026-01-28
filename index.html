@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Self-Storage | Planowanie Inwestycji</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">📦</div>
+                <div class="logo-text">
+                    <h1>Self-Storage Calculator</h1>
+                    <span>Planowanie inwestycji i analiza finansowa</span>
+                </div>
+            </div>
+            <nav class="nav-tabs">
+                <button class="tab-btn active" data-tab="investment">💰 Koszty Inwestycji</button>
+                <button class="tab-btn" data-tab="cashflow">📊 Cash Flow</button>
+                <button class="tab-btn" data-tab="summary">📋 Podsumowanie</button>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Tab: Koszty Inwestycji -->
+            <section id="investment-tab" class="tab-content active">
+                <div class="two-column-layout">
+                    <!-- Lewa kolumna - Formularz -->
+                    <div class="form-column">
+                        <div class="card">
+                            <h2 class="card-title">📐 Parametry Hali</h2>
+                            <div class="form-group">
+                                <label for="hallArea">Powierzchnia hali (m²)</label>
+                                <input type="number" id="hallArea" value="500" min="100" max="10000">
+                            </div>
+                            <div class="form-group">
+                                <label for="hallWidth">Szerokość hali (m)</label>
+                                <input type="number" id="hallWidth" value="20" min="5" max="100">
+                            </div>
+                            <div class="form-group">
+                                <label for="hallLength">Długość hali (m)</label>
+                                <input type="number" id="hallLength" value="25" min="5" max="200">
+                            </div>
+                            <div class="form-group">
+                                <label for="systemHeight">Wysokość systemu (mm)</label>
+                                <input type="number" id="systemHeight" value="2700" min="2000" max="4000" step="100">
+                            </div>
+                            <div class="form-group">
+                                <label for="corridorWidth">Szerokość korytarzy (m)</label>
+                                <input type="number" id="corridorWidth" value="1.5" min="1" max="3" step="0.1">
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h2 class="card-title">📦 Podział Boksów</h2>
+                            <div class="box-categories">
+                                <div class="box-category small">
+                                    <div class="category-header">
+                                        <span class="category-icon">🟢</span>
+                                        <span class="category-name">Małe (1-3 m²)</span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="smallBoxPercent">Procent (%)</label>
+                                        <input type="number" id="smallBoxPercent" value="50" min="0" max="100">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="smallBoxSize">Średni rozmiar (m²)</label>
+                                        <input type="number" id="smallBoxSize" value="2" min="1" max="3" step="0.5">
+                                    </div>
+                                </div>
+                                <div class="box-category medium">
+                                    <div class="category-header">
+                                        <span class="category-icon">🟡</span>
+                                        <span class="category-name">Średnie (4-7 m²)</span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="mediumBoxPercent">Procent (%)</label>
+                                        <input type="number" id="mediumBoxPercent" value="30" min="0" max="100">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="mediumBoxSize">Średni rozmiar (m²)</label>
+                                        <input type="number" id="mediumBoxSize" value="5" min="4" max="7" step="0.5">
+                                    </div>
+                                </div>
+                                <div class="box-category large">
+                                    <div class="category-header">
+                                        <span class="category-icon">🔴</span>
+                                        <span class="category-name">Duże (8-15 m²)</span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="largeBoxPercent">Procent (%)</label>
+                                        <input type="number" id="largeBoxPercent" value="20" min="0" max="100">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="largeBoxSize">Średni rozmiar (m²)</label>
+                                        <input type="number" id="largeBoxSize" value="10" min="8" max="15" step="0.5">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="percent-warning" id="percentWarning" style="display: none;">
+                                ⚠️ Suma procentów musi wynosić 100%
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h2 class="card-title">🏗️ Elementy Konstrukcyjne</h2>
+                            
+                            <div class="form-section">
+                                <h3>Ściany frontowe (białe)</h3>
+                                <div class="form-group">
+                                    <label for="frontWallPrice">Cena za m² (PLN)</label>
+                                    <input type="number" id="frontWallPrice" value="110" min="0">
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <h3>Ściany wewnętrzne (szare)</h3>
+                                <div class="form-group">
+                                    <label for="internalWallPrice">Cena za m² (PLN)</label>
+                                    <input type="number" id="internalWallPrice" value="84" min="0">
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <h3>Drzwi i rolety</h3>
+                                <div class="door-types">
+                                    <div class="door-type">
+                                        <label>Pojedyncze (1m)</label>
+                                        <input type="number" id="singleDoorPrice" value="780" min="0"> PLN/szt
+                                    </div>
+                                    <div class="door-type">
+                                        <label>Podwójne (2m)</label>
+                                        <input type="number" id="doubleDoorPrice" value="1560" min="0"> PLN/szt
+                                    </div>
+                                    <div class="door-type">
+                                        <label>Roleta 1.5m</label>
+                                        <input type="number" id="roller15Price" value="1700" min="0"> PLN/szt
+                                    </div>
+                                    <div class="door-type">
+                                        <label>Roleta 2m</label>
+                                        <input type="number" id="roller2Price" value="1800" min="0"> PLN/szt
+                                    </div>
+                                </div>
+                                <div class="form-group checkbox-group">
+                                    <label>
+                                        <input type="checkbox" id="useRollers" checked>
+                                        Duże boksy z roletami (zamiast drzwi podwójnych)
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <h3>Kicker plate (listwa przypodłogowa)</h3>
+                                <div class="form-group">
+                                    <label for="kickerPrice">Cena za mb (PLN)</label>
+                                    <input type="number" id="kickerPrice" value="81" min="0">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h2 class="card-title">⚙️ Wyposażenie Dodatkowe</h2>
+                            
+                            <div class="option-row">
+                                <div class="option-toggle">
+                                    <label class="switch">
+                                        <input type="checkbox" id="hasMesh" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                    <span>Siatka zabezpieczająca</span>
+                                </div>
+                                <div class="option-price">
+                                    <input type="number" id="meshPrice" value="50" min="0"> PLN/m²
+                                </div>
+                            </div>
+
+                            <div class="option-row">
+                                <div class="option-toggle">
+                                    <label class="switch">
+                                        <input type="checkbox" id="hasLightCeiling">
+                                        <span class="slider"></span>
+                                    </label>
+                                    <span>Lekki sufit</span>
+                                </div>
+                                <div class="option-price">
+                                    <input type="number" id="lightCeilingPrice" value="80" min="0"> PLN/mb
+                                </div>
+                            </div>
+
+                            <div class="option-row">
+                                <div class="option-toggle">
+                                    <label class="switch">
+                                        <input type="checkbox" id="hasElectronicLocks" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                    <span>Zamki elektroniczne</span>
+                                </div>
+                                <div class="option-price">
+                                    <input type="number" id="electronicLockPrice" value="550" min="0"> PLN/szt
+                                </div>
+                            </div>
+
+                            <div class="option-row">
+                                <div class="option-toggle">
+                                    <label class="switch">
+                                        <input type="checkbox" id="hasGate">
+                                        <span class="slider"></span>
+                                    </label>
+                                    <span>Brama wjazdowa</span>
+                                </div>
+                                <div class="option-price">
+                                    <input type="number" id="gatePrice" value="15000" min="0"> PLN
+                                </div>
+                            </div>
+
+                            <div class="option-row">
+                                <div class="option-toggle">
+                                    <label class="switch">
+                                        <input type="checkbox" id="hasCameras" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                    <span>System kamer</span>
+                                </div>
+                                <div class="option-details">
+                                    <div class="option-price">
+                                        <input type="number" id="cameraPrice" value="500" min="0"> PLN/szt
+                                    </div>
+                                    <div class="option-param">
+                                        <input type="number" id="cameraDensity" value="50" min="10"> m² na 3 kamery
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="option-row">
+                                <div class="option-toggle">
+                                    <label class="switch">
+                                        <input type="checkbox" id="hasLighting" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                    <span>Oświetlenie</span>
+                                </div>
+                                <div class="option-details">
+                                    <div class="option-price">
+                                        <input type="number" id="lightPrice" value="150" min="0"> PLN/szt
+                                    </div>
+                                    <div class="option-param">
+                                        <input type="number" id="lightDensity" value="5" min="1"> m korytarza na lampę
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="btn-primary btn-calculate" onclick="calculateAll()">
+                            🧮 Przelicz wszystko
+                        </button>
+                    </div>
+
+                    <!-- Prawa kolumna - Wizualizacja i wyniki -->
+                    <div class="results-column">
+                        <div class="card visualization-card">
+                            <h2 class="card-title">🗺️ Wizualizacja Układu Boksów</h2>
+                            <div class="visualization-container">
+                                <canvas id="layoutCanvas"></canvas>
+                            </div>
+                            <div class="layout-legend">
+                                <div class="legend-item"><span class="legend-color small"></span> Małe (1-3 m²)</div>
+                                <div class="legend-item"><span class="legend-color medium"></span> Średnie (4-7 m²)</div>
+                                <div class="legend-item"><span class="legend-color large"></span> Duże (8-15 m²)</div>
+                                <div class="legend-item"><span class="legend-color corridor"></span> Korytarze</div>
+                            </div>
+                            <div class="layout-stats" id="layoutStats">
+                                <!-- Statystyki layoutu będą tu wstawione przez JS -->
+                            </div>
+                        </div>
+
+                        <div class="card costs-card">
+                            <h2 class="card-title">💵 Kalkulacja Kosztów Inwestycji</h2>
+                            <div class="costs-breakdown" id="costsBreakdown">
+                                <!-- Koszty będą tu wstawione przez JS -->
+                            </div>
+                            <div class="total-cost">
+                                <span>CAŁKOWITY KOSZT INWESTYCJI:</span>
+                                <span class="total-value" id="totalInvestment">0 PLN</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab: Cash Flow -->
+            <section id="cashflow-tab" class="tab-content">
+                <div class="two-column-layout">
+                    <div class="form-column">
+                        <div class="card">
+                            <h2 class="card-title">📈 Parametry Przychodów</h2>
+                            <div class="form-group">
+                                <label for="rentalPrice">Cena najmu za m² (PLN/miesiąc)</label>
+                                <input type="number" id="rentalPrice" value="80" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="monthlyRental">Zakładany najem miesięczny (m²)</label>
+                                <input type="number" id="monthlyRental" value="20" min="1">
+                                <small>Ile m² będziemy wynajmować co miesiąc</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="maxOccupancy">Maksymalne obłożenie (%)</label>
+                                <input type="number" id="maxOccupancy" value="85" min="50" max="100">
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h2 class="card-title">📋 Warunki Kontraktu</h2>
+                            <div class="form-group">
+                                <label for="contractLength">Długość kontraktu (lata)</label>
+                                <input type="number" id="contractLength" value="10" min="1" max="30">
+                            </div>
+                            <div class="form-group">
+                                <label for="licenseFee">Opłata licencyjna (%)</label>
+                                <input type="range" id="licenseFee" value="15" min="10" max="25" step="1">
+                                <div class="range-value"><span id="licenseFeeValue">15</span>%</div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h2 class="card-title">💸 Koszty Operacyjne</h2>
+                            <div class="form-group">
+                                <label for="monthlyExpenses">Inne opłaty miesięczne (media, etc.) (PLN)</label>
+                                <input type="number" id="monthlyExpenses" value="5000" min="0">
+                            </div>
+                        </div>
+
+                        <button class="btn-primary btn-calculate" onclick="calculateCashFlow()">
+                            📊 Przelicz Cash Flow
+                        </button>
+                    </div>
+
+                    <div class="results-column">
+                        <div class="card">
+                            <h2 class="card-title">📊 Kluczowe Wskaźniki</h2>
+                            <div class="kpi-grid">
+                                <div class="kpi-card">
+                                    <div class="kpi-icon">⏱️</div>
+                                    <div class="kpi-value" id="breakEvenMonths">-</div>
+                                    <div class="kpi-label">Próg rentowności</div>
+                                    <div class="kpi-sublabel">(miesięcy do zwrotu)</div>
+                                </div>
+                                <div class="kpi-card">
+                                    <div class="kpi-icon">📈</div>
+                                    <div class="kpi-value" id="roiPercent">-</div>
+                                    <div class="kpi-label">ROI</div>
+                                    <div class="kpi-sublabel">(zwrot z inwestycji)</div>
+                                </div>
+                                <div class="kpi-card">
+                                    <div class="kpi-icon">💰</div>
+                                    <div class="kpi-value" id="monthlyProfit">-</div>
+                                    <div class="kpi-label">Zysk miesięczny</div>
+                                    <div class="kpi-sublabel">(przy pełnym obłożeniu)</div>
+                                </div>
+                                <div class="kpi-card">
+                                    <div class="kpi-icon">🏆</div>
+                                    <div class="kpi-value" id="totalProfit">-</div>
+                                    <div class="kpi-label">Zysk całkowity</div>
+                                    <div class="kpi-sublabel">(przez cały kontrakt)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h2 class="card-title">📉 Wykres Cash Flow</h2>
+                            <div class="chart-container">
+                                <canvas id="cashFlowChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h2 class="card-title">📋 Tabela Przepływów</h2>
+                            <div class="table-container">
+                                <table class="cashflow-table" id="cashFlowTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Miesiąc</th>
+                                            <th>Obłożenie</th>
+                                            <th>Przychód</th>
+                                            <th>Koszty</th>
+                                            <th>Zysk netto</th>
+                                            <th>Skumulowany</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Dane będą wstawione przez JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab: Podsumowanie -->
+            <section id="summary-tab" class="tab-content">
+                <div class="summary-container">
+                    <div class="card summary-header-card">
+                        <h2>📋 Raport Podsumowujący</h2>
+                        <p>Kompleksowe zestawienie kosztów inwestycji i prognoz finansowych</p>
+                        <button class="btn-secondary" onclick="printSummary()">🖨️ Drukuj raport</button>
+                    </div>
+
+                    <div class="summary-grid">
+                        <div class="card">
+                            <h3>🏗️ Parametry Obiektu</h3>
+                            <div class="summary-list" id="summaryParams">
+                                <!-- Dane wstawione przez JS -->
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h3>📦 Struktura Boksów</h3>
+                            <div class="summary-list" id="summaryBoxes">
+                                <!-- Dane wstawione przez JS -->
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h3>💵 Koszty Inwestycji</h3>
+                            <div class="summary-list" id="summaryCosts">
+                                <!-- Dane wstawione przez JS -->
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h3>📊 Prognoza Finansowa</h3>
+                            <div class="summary-list" id="summaryFinancial">
+                                <!-- Dane wstawione przez JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card recommendation-card">
+                        <h3>💡 Rekomendacje</h3>
+                        <div class="recommendations" id="recommendations">
+                            <!-- Rekomendacje wstawione przez JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Self-Storage Calculator v1.0 | Narzędzie do planowania inwestycji</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
